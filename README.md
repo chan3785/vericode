@@ -14,6 +14,8 @@ In the current digital landscape, **verifying programming skills** is inefficien
 
 Vericode utilizes **zkVerify and Open Campus' EDU Chain** as the primary network while **supporting Arbitrum** to provide a **secure and reliable coding test and verification system**.
 
+![image](https://github.com/user-attachments/assets/2fa70cd5-e7bf-4da5-8054-7fac61634a7d)
+
 - Developers take coding tests, and their results are **verified using Zero-Knowledge Proofs (ZK Proofs)**.
 - Successful candidates receive **blockchain-based certificates (NFT/ID cards)** to prove their skills.
 - All certification data is **stored on EDU Chain** by default, with **Arbitrum integration** ensuring **scalability and flexibility**.
@@ -51,6 +53,7 @@ Vericode utilizes **zkVerify and Open Campus' EDU Chain** as the primary network
 
 Vericode is a **trustworthy, decentralized, privacy-preserving coding test and verification platform** that leverages **zkVerify, Open Campus EDU Chain, and Arbitrum** to **provide developers with a new way to prove their skills**. 🚀
 
+---
 
 <details>
 <summary>
