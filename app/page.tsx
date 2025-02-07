@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 
 const problems = [
-  { id: 1, state: null, name: "Plus Ahrithmetics", level: 1, rate: "88%" },
+  { id: 1, state: null, name: "Addition Operation", level: 1, rate: "98%" },
 ];
 export default function MainPage() {
   const router = useRouter();

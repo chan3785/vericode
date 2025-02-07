@@ -17,7 +17,7 @@ export default function Home() {
       <LangContext.Provider value={contextValue}>
         <div className="justify-between flex mb-2 ">
           <span className="text-2xl font-bold text-white">
-            problem 18 / CPMM
+            problem 1 / Addition Operation
           </span>
           <LanguageSelect />
         </div>

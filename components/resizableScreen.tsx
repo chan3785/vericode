@@ -21,13 +21,14 @@ export function ResizableScreen() {
           >
             <div className="p-6">
               <span className="font-semibold text-white">
-                Jokester began sneaking into the castle in the middle of the
-                night and leaving jokes all over the place: under the king's
-                pillow, in his soup, even in the royal toilet. The king was
-                furious, but he couldn't seem to stop Jokester. And then, one
-                day, the people of the kingdom discovered that the jokes left by
-                Jokester were so funny that they couldn't help but laugh. And
-                once they started laughing, they couldn't stop.
+                <p>Problem Description</p> <br />
+                <p>You are given two integers, 𝐴 and 𝐵 . </p> <br />
+                <p>Write a program that calculates and prints their sum.</p>
+                Input Format The first line contains two integers,
+                <br /> 𝐴 and 𝐵, separated by a space.
+                <br /> − 10^9 ≤ 𝐴 , 𝐵 ≤ 10^9 <br /> −10^9 ≤ 𝐴,𝐵≤10^9 <br />
+                <br />
+                Output Format Print the sum of 𝐴 and 𝐵.
               </span>
             </div>
           </div>
