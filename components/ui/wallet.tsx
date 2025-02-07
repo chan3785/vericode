@@ -132,7 +132,7 @@ export const Wallet: React.FC = () => {
             logout();
           }}
         >
-          {ellipsisAddress(account)} ( {balance} DOT )
+          {ellipsisAddress(account)} ( {balance} EDU )
         </Button>
       ) : (
         <Button

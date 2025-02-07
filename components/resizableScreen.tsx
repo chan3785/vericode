@@ -15,7 +15,7 @@ export function ResizableScreen() {
       className="max-w-md rounded-lg border md:min-w-full h-full"
     >
       <ResizablePanel defaultSize={40}>
-        <ScrollArea className="h-full rounded-md border">
+        <ScrollArea className="h-full rounded-md">
           <div
             className={`"flex min-h-[705px] items-center justify-center p-6"`}
           >
@@ -28,7 +28,22 @@ export function ResizableScreen() {
                 <br /> 𝐴 and 𝐵, separated by a space.
                 <br /> − 10^9 ≤ 𝐴 , 𝐵 ≤ 10^9 <br /> −10^9 ≤ 𝐴,𝐵≤10^9 <br />
                 <br />
-                Output Format Print the sum of 𝐴 and 𝐵.
+                Output Format Print the sum of 𝐴 and 𝐵. <br />
+                <br /> Example Input & Output <br />
+                <br /> Example 1<br />
+                <br /> Input: <br />
+                <br /> 3 5<br />
+                <br /> 8<br /> <br /> Example 2<br />
+                <br /> Input: <br />
+                <br /> -10 4<br />
+                <br /> -6
+                <br />
+                <br /> Example 3<br />
+                <br /> Input: <br />
+                <br /> 1000000000 1000000000
+                <br />
+                <br /> 2000000000
+                <br />
               </span>
             </div>
           </div>
@@ -38,7 +53,7 @@ export function ResizableScreen() {
       <ResizablePanel defaultSize={60}>
         <ResizablePanelGroup direction="vertical">
           <ResizablePanel defaultSize={70}>
-            <ScrollArea className="h-full whitespace-nowrap rounded-md border">
+            <ScrollArea className="h-full whitespace-nowrap rounded-md">
               <div className="flex w-full items-center justify-center p-6">
                 <CodeMirrorEditor />
               </div>
@@ -47,7 +62,9 @@ export function ResizableScreen() {
           <ResizableHandle withHandle />
           <ResizablePanel defaultSize={30}>
             <div className="flex h-full items-center justify-center p-6">
-              <span className="font-semibold">Three</span>
+              <span className="font-semibold text-white">
+                your result will be here!
+              </span>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
