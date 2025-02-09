@@ -1,6 +1,7 @@
 import { createConfig, http } from 'wagmi';
 import { opencampus } from './lib/opencampus';
 import { metaMask } from 'wagmi/connectors';
+import { arbitrumSepolia } from 'wagmi/chains'
 
 export const config = createConfig({
   chains: [opencampus],
@@ -8,7 +9,7 @@ export const config = createConfig({
   ssr: true,
   multiInjectedProviderDiscovery: false,
   transports: {
-    [opencampus.id]: http()
+    [opencampus.id]: http(),
   }
 });
 

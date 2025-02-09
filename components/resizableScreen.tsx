@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/resizable";
 import CodeMirrorEditor from "./codemirror";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { useCallback } from "react";
 
 export function ResizableScreen() {
   return (
@@ -52,7 +53,7 @@ export function ResizableScreen() {
       <ResizableHandle withHandle />
       <ResizablePanel defaultSize={60}>
         <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={70}>
+          <ResizablePanel defaultSize={80}>
             <ScrollArea className="h-full whitespace-nowrap rounded-md">
               <div className="flex w-full items-center justify-center p-6">
                 <CodeMirrorEditor />
@@ -60,10 +61,10 @@ export function ResizableScreen() {
             </ScrollArea>
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={30}>
-            <div className="flex h-full items-center justify-center p-6">
+          <ResizablePanel defaultSize={20}>
+            <div className="flex h-full text-start p-6">
               <span className="font-semibold text-white">
-                your result will be here!
+                sum of a, b: 2000000000
               </span>
             </div>
           </ResizablePanel>

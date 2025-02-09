@@ -3,6 +3,7 @@ import { RecoilRoot } from "recoil";
 import { Button } from "../ui/button";
 import { Wallet } from "../ui/wallet";
 import { useRouter } from "next/navigation";
+import { Account } from "./account";
 
 export default function Header() {
   const router = useRouter();
@@ -23,14 +24,14 @@ export default function Header() {
           <Button
             className="w-30 ml-7 h-8 bg-blue-400 font-semibold"
             onClick={() => {
-              router.push("/test");
+              router.push("/");
             }}
           >
             coding test
           </Button>
         </div>
         <div>
-          <Wallet />
+          <Account />
         </div>
       </nav>
     </div>
