@@ -5,6 +5,12 @@ import { useState } from "react";
 import { LangContext } from "@/context/langContext";
 import Provider from "@/context";
 import Header from "@/components/layout/header";
+import {
+  Web3AuthInnerContext,
+  Web3AuthProvider,
+} from "@web3auth/modal-react-hooks";
+import { web3AuthContextConfig } from "@/utils/web3provider";
+import { WalletServicesProvider } from "@web3auth/wallet-services-plugin-react-hooks";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +37,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>
-          <Header />
-          {children}
-        </Provider>
+        <Web3AuthProvider config={web3AuthContextConfig}>
+          <WalletServicesProvider context={Web3AuthInnerContext}>
+            <Provider>
+              <Header />
+              {children}
+            </Provider>
+          </WalletServicesProvider>
+        </Web3AuthProvider>
       </body>
     </html>
   );

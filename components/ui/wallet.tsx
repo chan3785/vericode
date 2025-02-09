@@ -10,57 +10,31 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "./button";
 import { ellipsisAddress } from "@/utils/strings";
-import RPC from "../../types/polkadotRPC";
-import { CommonPrivateKeyProvider } from "@web3auth/base-provider";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
+import RPC from "../../types/ethersRPC";
 import { AuthAdapter } from "@web3auth/auth-adapter";
-
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { Web3Auth } from "@web3auth/modal";
+import { ethers } from "ethers";
+import { web3auth } from "@/utils/web3-auth";
 export const Wallet: React.FC = () => {
-  const [web3auth, setWeb3auth] = useState<Web3AuthNoModal | null>(null);
+  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [account, setAccount] = useState();
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState("");
   const clientId =
     "BNq8a519TbPEoqb9ZzRf60YangjoXuSjfpez0VBDrfgVWXLuzM68AsWhm_VGhtBfoXciLTFw4BfE7_ocOKYPprI";
 
   useEffect(() => {
     const init = async () => {
       try {
-        const chainConfig = {
-          chainNamespace: CHAIN_NAMESPACES.OTHER,
-          chainId: "420420421",
-          rpcTarget: "https://westend-asset-hub-eth-rpc.polkadot.io",
-          displayName: "Polkadot Testnet",
-          blockExplorerUrl: "https://explorer.polkascan.io/",
-          ticker: "WND",
-          tickerName: "Polkadot",
-          logo: "",
-        };
-
-        const privateKeyProvider = new CommonPrivateKeyProvider({
-          config: { chainConfig },
-        });
-
-        const web3authInstance = new Web3AuthNoModal({
-          clientId,
-          privateKeyProvider,
-          web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-        });
-
-        const authAdapter = new AuthAdapter({
-          adapterSettings: {
-            uxMode: UX_MODE.REDIRECT,
-          },
-        });
-        web3authInstance.configureAdapter(authAdapter);
-
-        setWeb3auth(web3authInstance);
-
-        await web3authInstance.init();
-
-        setProvider(web3authInstance.provider);
-        if (web3authInstance.connectedAdapterName) {
+        if (!web3auth) {
+          console.log("web3auth not initialized yet");
+          return;
+        }
+        await web3auth.initModal();
+        setProvider(web3auth.provider);
+        if (web3auth.connected) {
           setLoggedIn(true);
         }
       } catch (error) {
@@ -76,9 +50,7 @@ export const Wallet: React.FC = () => {
       console.log("web3auth not initialized yet");
       return;
     }
-    const web3authProvider = await web3auth.connectTo(WALLET_ADAPTERS.AUTH, {
-      loginProvider: "google",
-    });
+    const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
     if (web3auth.connected) {
       setLoggedIn(true);
@@ -115,9 +87,10 @@ export const Wallet: React.FC = () => {
       console.log(address);
       setAccount(address);
 
-      const Balance = await rpc.getBalance();
-      setBalance(Balance.data.free);
-      console.log(Balance.data.free);
+      const balance = ethers.formatEther(
+        await rpc.getBalance() // Balance is in wei
+      );
+      setBalance(balance);
     };
     if (loggedIn) {
       getAccounts();
