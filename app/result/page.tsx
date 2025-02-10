@@ -10,7 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { wagmiContractConfigEdu } from "@/lib/contracts";
+import {
+  wagmiContractConfigArb,
+  wagmiContractConfigEdu,
+} from "@/lib/contracts";
 import { ethers } from "ethers";
 import { useRouter } from "next/navigation";
 import { useWriteContract } from "wagmi";
@@ -27,13 +30,19 @@ export default function MainPage() {
     return;
   }
   const address = ethers.getAddress(account);
-  const handleMint = () => {
+  const handleMintEdu = () => {
     writeContract({
       ...wagmiContractConfigEdu,
       functionName: "safeMint",
       args: [address, `${problems[0].name}`],
     });
-    console.log(address, typeof address);
+  };
+  const handleMintArb = () => {
+    writeContract({
+      ...wagmiContractConfigArb,
+      functionName: "safeMint",
+      args: [address, `${problems[0].name}`],
+    });
   };
 
   return (
@@ -57,18 +66,21 @@ export default function MainPage() {
           </TableHeader>
           <TableBody>
             {problems?.map((problem) => (
-              <TableRow key={problem.id}>
+              <TableRow key={problem.id} className="text-center">
                 <TableCell className="font-medium text-center">
                   {problem.state ?? ""}
                 </TableCell>
-                <TableCell className="font-medium items-center flex text-center">
+                <TableCell className="font-medium text-start">
                   {problem.name}
                 </TableCell>
                 <TableCell className="text-center">{problem.level}</TableCell>
                 <TableCell className="text-center">{problem.rate}</TableCell>
                 <TableCell className="text-center">
-                  <Button className="h-[20px]" onClick={handleMint}>
-                    Mint
+                  <Button className="h-[20px] mb-1" onClick={handleMintEdu}>
+                    Mint (Edu)
+                  </Button>
+                  <Button className="h-[20px]" onClick={handleMintArb}>
+                    Mint (Arb)
                   </Button>
                 </TableCell>
               </TableRow>
