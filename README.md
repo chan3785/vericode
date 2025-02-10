@@ -1,5 +1,5 @@
 # Vericode
-[Demo]() | [Video]() | [Pitchdeck](https://www.figma.com/deck/AU224Y9MMVlaamwEpE5HWI)
+[Demo](vericode.vercel.app) | [Video](https://youtu.be/ze64P6ud5DM) | [Pitchdeck](https://www.figma.com/deck/AU224Y9MMVlaamwEpE5HWI)
 
 **A Web3 Coding Test and Certification Platform Based on EDU Chain and Arbitrum with zkVerify**
 
