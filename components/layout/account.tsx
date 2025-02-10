@@ -3,9 +3,11 @@ import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 import { Button } from "../ui/button";
 import { ellipsisAddress } from "@/utils/strings";
+import { useRouter } from "next/navigation";
 
 export const Account = () => {
   const account = useAccount();
+  const router = useRouter();
 
   const { connectors, connect, status, error } = useConnect();
   const { disconnect } = useDisconnect();
@@ -23,7 +25,10 @@ export const Account = () => {
           connectors.map((connector) => (
             <Button
               key={connector.uid}
-              onClick={() => connect({ connector })}
+              onClick={() => {
+                connect({ connector });
+                router.push("/zkproof");
+              }}
               className="bg-indigo-950"
             >
               Connect

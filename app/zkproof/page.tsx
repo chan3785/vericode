@@ -18,7 +18,7 @@ const ZkProofPage = () => {
 
   // ✅ Proof 생성
   const handleGenerateProof = async () => {
-    setStatus("🚀 Proof 생성 중...");
+    setStatus("🚀 Generating Proof...");
     try {
       const witnessPath = "/proof/witness.wtns";
       const zkeyPath = "/proof/circuit.zkey";
@@ -30,12 +30,12 @@ const ZkProofPage = () => {
       const proofString = proof.proof;
       setExtractedProof(proofString);
 
-      toast({ title: "✅ Proof 생성 완료", description: "Proof 및 Public Signals을 다운로드할 수 있습니다." });
-      setStatus("✅ Proof 생성 완료! 다운로드 후 제출 가능");
+      toast({ title: "✅ Proof Generated", description: "Proof and Public Signals are available for download." });
+      setStatus("✅ Proof Generated! Ready for submission");
     } catch (error) {
-      console.error("🚨 Proof 생성 중 오류 발생:", error);
-      setStatus("🚨 Proof 생성 중 오류 발생");
-      toast({ title: "❌ Proof 생성 실패", description: "오류가 발생했습니다." });
+      console.error("🚨 Error generating proof:", error);
+      setStatus("🚨 Error generating proof");
+      toast({ title: "❌ Proof Generation Failed", description: "An error occurred." });
     }
   };
 
@@ -47,23 +47,23 @@ const ZkProofPage = () => {
     link.click();
   };
 
-  // ✅ Proof 제출
+  // ✅ Submit Proof
   const handleSubmitProof = async () => {
-    setStatus("🚀 Proof 제출 중...");
+    setStatus("🚀 Submitting Proof...");
     try {
       const websocketUrl = process.env.NEXT_PUBLIC_WEBSOCKET;
       const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
   
       if (!websocketUrl || !privateKey) {
-        throw new Error("❌ 환경변수(NEXT_PUBLIC_WEBSOCKET 또는 NEXT_PUBLIC_PRIVATE_KEY)가 설정되지 않음");
+        throw new Error("❌ Missing environment variables (NEXT_PUBLIC_WEBSOCKET or NEXT_PUBLIC_PRIVATE_KEY)");
       }
   
-      console.log("🔍 WebSocket 연결 URL:", websocketUrl);
+      console.log("🔍 WebSocket URL:", websocketUrl);
       console.log("🔍 Private Key:", privateKey);
   
       const provider = new WsProvider(websocketUrl);
       const api = await ApiPromise.create({ provider });
-      console.log("✅ 블록체인 API 연결 성공");
+      console.log("✅ Blockchain API Connected");
   
       const keyring = new Keyring({ type: "sr25519" });
   
@@ -75,10 +75,10 @@ const ZkProofPage = () => {
       const publicRes = await fetch("/proof/public.json");
   
       if (!verificationKeyRes.ok || !proofRes.ok || !publicRes.ok) {
-        throw new Error("🚨 JSON 파일 로드 실패!");
+        throw new Error("🚨 Failed to load JSON files!");
       }
   
-      console.log("✅ 모든 JSON 파일 로드 성공");
+      console.log("✅ All JSON files loaded successfully");
   
       const proofJson = await proofRes.json();
       const extractedProof = proofJson.proof;
@@ -90,8 +90,6 @@ const ZkProofPage = () => {
       const pub = await publicRes.json();
       console.log("🔍 Public Signals (Raw):", pub);
       console.log("0x" + BigNumber(pub).toString(16).padStart(64, '0'));
-
-  
   
       const formattedVk = {
         ...vk,
@@ -105,124 +103,163 @@ const ZkProofPage = () => {
       console.log("🔍 Formatted Verification Key:", formattedVk);
   
       const account = keyring.addFromUri(privateKey);
-      console.log("✅ Keyring account 로드 완료");
+      console.log("✅ Keyring account loaded");
   
-      console.log("📩 Proof 제출 준비...");
+      console.log("📩 Preparing Proof submission...");
       const submit = api.tx.settlementFFlonkPallet.submitProof(
         { Vk: formattedVk },
         extractedProof,
         "0x" + BigNumber(pub).toString(16).padStart(64, '0'),
         null
       );
-  
-      console.log("🚀 Proof 제출 실행 중...");
+
+
+
+      console.log("🚀 Executing Proof submission...");
       await submit.signAndSend(account, ({ txHash, status, dispatchError }) => {
         if (status.isReady) {
           console.log("📩 Proof submitted with hash:", txHash.toHex());
-          setStatus(`📩 Proof 제출됨 (TxHash: ${txHash.toHex()})`);
-          toast({ title: "✅ Proof 제출 완료", description: `TxHash: ${txHash.toHex()}` });
+          setStatus(`📩 Proof Submitted (TxHash: ${txHash.toHex()})`);
+          toast({ 
+            title: "✅ Proof Submitted", 
+            description: `TxHash: ${txHash.toHex()}` 
+          });
         } else if (status.isInBlock) {
           if (!dispatchError) {
-            console.log("🎉 Proof 검증 성공!");
-            setStatus("🎉 Proof 검증 성공!");
-            toast({ title: "🎉 Proof 검증 성공", description: "트랜잭션이 블록에 포함되었습니다." });
+            console.log("🎉 Proof Verified Successfully!");
+            
+            // ✅ setStatus에 HTML 링크 적용
+            setStatus(
+              `🎉 Proof Verified Successfully!<br />
+              Check your submission here: 
+              <a href="https://zkverify-explorer.zkverify.io/extrinsics/${txHash.toHex()}" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">
+                zkverify-explorer
+              </a>`
+            );
+            
+            
+      
+            // ✅ toast에서 클릭 가능한 링크 적용
+            toast({ 
+              title: "🎉 Proof Verified Successfully!",
+              description: (
+                <span>
+                  Check your submission here:{" "}
+                  <a 
+                    href={`https://zkverify-explorer.zkverify.io/${txHash.toHex()}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    zkverify-explorer
+                  </a>
+                </span>
+              )
+            });
+      
           } else {
-            console.error("❌ Proof 검증 실패:", dispatchError.toString());
-            setStatus("❌ Proof 검증 실패");
-            toast({ title: "❌ Proof 검증 실패", description: dispatchError.toString() });
+            console.error("❌ Proof Verification Failed:", dispatchError.toString());
+            setStatus("❌ Proof Verification Failed");
+            toast({ 
+              title: "❌ Proof Verification Failed", 
+              description: dispatchError.toString() 
+            });
           }
         }
       });
+      
+      
   
     } catch (error: any) {
-      console.error("🚨 Proof 제출 중 오류 발생:", error);
-      setStatus("🚨 Proof 제출 중 오류 발생");
-      toast({ title: "❌ Proof 제출 실패", description: error.toString() });
+      console.error("🚨 Error submitting proof:", error);
+      setStatus("🚨 Error submitting proof");
+      toast({ title: "❌ Proof Submission Failed", description: error.toString() });
     }
   };
+
   
 
   return (
-    <div className="container mx-auto p-6 flex space-x-6 mt-16">
+    <div className="w-full h-screen flex flex-col lg:flex-row p-6 space-y-6 lg:space-y-0 lg:space-x-6 mt-16">
       
-      {/* 왼쪽 패널 (Proof 생성 및 제출) */}
-      <div className="w-2/5 space-y-6">
+      {/* Left Panel (Proof Generation & Submission) */}
+      <div className="w-full lg:w-2/5 flex flex-col gap-4">
         
-        {/* Proof 생성 */}
-        <Card className="shadow-lg h-[220px]">
+        {/* Proof Generation */}
+        <Card className="shadow-lg flex-1 flex flex-col justify-center">
           <CardHeader>
-            <CardTitle>📌 Step 1: Proof 생성</CardTitle>
+            <CardTitle>📌 Step 1: Generate Proof</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col items-center justify-center">
             <Button onClick={handleGenerateProof} className="bg-blue-600 text-white w-full text-lg py-3">
-              🔄 Proof 생성하기
+              🔄 Generate Proof
             </Button>
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              <Button onClick={() => downloadFile("proof.json", proofData || "{}")} className="bg-gray-700 text-white">
+            <div className="grid grid-cols-2 gap-2 mt-4 w-full">
+              <Button onClick={() => downloadFile("proof.json", proofData || "{}")} className="bg-gray-700 text-white w-full">
                 ⬇ Proof.json
               </Button>
-              <Button onClick={() => downloadFile("public.json", publicData || "{}")} className="bg-gray-700 text-white">
+              <Button onClick={() => downloadFile("public.json", publicData || "{}")} className="bg-gray-700 text-white w-full">
                 ⬇ Public.json
               </Button>
             </div>
           </CardContent>
         </Card>
   
-        {/* Proof 제출 */}
-        <Card className="shadow-lg h-[155px]">
+        {/* Proof Submission */}
+        <Card className="shadow-lg flex-1 flex flex-col justify-center">
           <CardHeader>
-            <CardTitle>📌 Step 2: Proof 제출</CardTitle>
+            <CardTitle>📌 Step 2: Submit Proof</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col items-center justify-center mt-10 mb-5">
             <Button
               onClick={handleSubmitProof}
               className="bg-green-600 text-white w-full text-lg py-3"
               disabled={!proofData || !publicData}
             >
-              🚀 Proof 제출하기
+              🚀 Submit Proof
             </Button>
           </CardContent>
         </Card>
   
-        {/* 현재 상태 */}
-        <Card className="shadow-lg h-[140px]">
+        {/* Current Status */}
+        <Card className="shadow-lg flex-1 flex flex-col justify-center">
           <CardHeader>
-            <CardTitle>📢 현재 상태</CardTitle>
+            <CardTitle>📢 Current Status</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-gray-500">{status}</p>
+          <CardContent className="flex items-center mt-10 mb-5">
+            <p className="text-gray-500 text-center" dangerouslySetInnerHTML={{ __html: status }} />
           </CardContent>
         </Card>
   
       </div>
   
-      {/* 오른쪽 패널 (출력) */}
-      <div className="w-3/5 space-y-6">
+      {/* Right Panel (Output) */}
+      <div className="w-full lg:w-3/5 flex flex-col gap-4">
         
-        {/* 생성된 Proof */}
-        <Card className="shadow-lg h-[340px]">
+        {/* Generated Proof */}
+        <Card className="shadow-lg flex-[2] flex flex-col justify-center">
           <CardHeader>
-            <CardTitle>📜 생성된 Proof</CardTitle>
+            <CardTitle>📜 Generated Proof</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex items-center justify-center">
             {proofData ? (
-              <pre className="bg-gray-100 p-4 rounded overflow-auto max-h-[240px]">{proofData}</pre>
+              <pre className="bg-gray-100 p-4 rounded overflow-auto max-h-[300px] w-full">{proofData}</pre>
             ) : (
-              <p className="text-gray-400 italic">Proof가 생성되면 여기에 표시됩니다.</p>
+              <p className="text-gray-400 italic text-center">Proof will be displayed here once generated.</p>
             )}
           </CardContent>
         </Card>
   
         {/* Public Signals */}
-        <Card className="shadow-lg h-[200px]">
+        <Card className="shadow-lg flex-1 flex flex-col justify-center">
           <CardHeader>
-            <CardTitle>📊 Public Signals</CardTitle>
+            <CardTitle>📊 Public.json</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex items-center justify-center">
             {publicData ? (
-              <pre className="bg-gray-100 p-4 rounded overflow-auto max-h-[140px]">{publicData}</pre>
+              <pre className="bg-gray-100 p-4 rounded overflow-auto max-h-[140px] w-full">{publicData}</pre>
             ) : (
-              <p className="text-gray-400 italic">Public Signals가 생성되면 여기에 표시됩니다.</p>
+              <p className="text-gray-400 italic text-center">Public.json will be displayed here once generated.</p>
             )}
           </CardContent>
         </Card>
@@ -231,7 +268,6 @@ const ZkProofPage = () => {
   
     </div>
   );
-  
 };
 
 export default ZkProofPage;
