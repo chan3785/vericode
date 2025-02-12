@@ -1,6 +1,8 @@
 # Vericode
 [Demo](vericode.vercel.app) | [Video](https://youtu.be/ze64P6ud5DM) | [Pitchdeck](https://www.figma.com/deck/AU224Y9MMVlaamwEpE5HWI)
 
+[zkVerify Code](https://github.com/chan3785/vericode/tree/main/public/proof)
+
 **A Web3 Coding Test and Certification Platform Based on EDU Chain and Arbitrum with zkVerify**
 
 ## Problem Statement
